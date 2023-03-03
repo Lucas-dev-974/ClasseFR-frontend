@@ -5,6 +5,7 @@ import Prediction from './pages/Prediction'
 import Index from './pages/index';
 import Stats_globales from './pages/stats_globales';
 import Stats_modele from './pages/stats_modele';
+import Login from './pages/login';
 
 import styles from './App.module.css';
 import Navbar from './components/navbar';
@@ -27,6 +28,7 @@ const App: Component = () => {
       
       <Switch fallback={<div>Not Found</div>}>
         <Match when={page == ""}> <Index /> </Match>
+        <Match when={page == "login"}> <Login/> </Match>
         <Match when={page == "prediction"}> <Prediction /> </Match>
         <Match when={page == "stats_globales"}> <Stats_globales/> </Match>
         <Match when={page == "stats_modele"}> <Stats_modele/> </Match>
