@@ -18,11 +18,11 @@ import { notifs } from './signaux';
 const App: Component = () => {
 
   // Récuperer le dernier elt de l'url
-  const page = window.location.pathname.split( '/' )[window.location.pathname.split( '/' ).length - 1]; // ATTENTION, implique qu'il n'est pas possible d'avoir des urls dont la fin est identiques 
+  const page = window.location.pathname.split( '/' )[window.location.pathname.split( '/' ).length - 1]; // ATTENTION, implique qu'il n'est pas possible d'avoir des urls dont la fin est identiques
   
   return (
     <main class={styles.App}>
-      <Navbar />
+      <Navbar page={page} />
 
       <Show when={notifs().length > 0}>
         <Notification notif={notifs()[notifs().length - 1]} />
