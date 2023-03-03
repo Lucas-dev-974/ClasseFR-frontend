@@ -4,6 +4,7 @@ import { Component, createSignal, Match, onMount, Show, Switch } from 'solid-js'
 import Prediction from './pages/Prediction'
 import Index from './pages/index';
 import Stats_globales from './pages/stats_globales';
+import Entrainement from './pages/entrainement';
 // import Stats_modele from './pages/stats_modele';
 
 import styles from './App.module.css';
@@ -29,6 +30,7 @@ const App: Component = () => {
         <Match when={page == ""}> <Index /> </Match>
         <Match when={page == "prediction"}> <Prediction /> </Match>
         <Match when={page == "stats_globales"}> <Stats_globales/> </Match>
+        <Match when={page == "entrainement"}> <Entrainement/> </Match>
         {/* <Match when={page == "stats_modele"}> <Stats_modele/> </Match> */}
       </Switch>
     </main>
