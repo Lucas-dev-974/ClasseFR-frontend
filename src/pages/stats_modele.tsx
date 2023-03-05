@@ -4,7 +4,7 @@
 // Faire un flex nowrap pour les images prédictions
 //test refresh
 import { Chart } from "chart.js";
-import { createEffect, createSignal, on, onMount } from "solid-js";
+import { createEffect, createSignal, on, onMount, Show } from "solid-js";
 import { render } from "solid-js/web";
 
 import SelectModel from "../components/SelectModel";
@@ -251,27 +251,45 @@ export default function Stats_modele() {
             )
         }
         
+
+        const [onShowGraph,setShowGraph] = createSignal('line')
+        const showGraph = (e: any) => {
+            setShowGraph(e.target.value)
+            if(onShowGraph() == 'pie') handlePieGraph([90,10]);
+            if(onShowGraph() == 'line')
+        }
+        
+
         // Return de la page finale à charger
         return (
-            <main class="sm:container mx-auto">
+            <main class="container mx-auto">
                 <div class="flex flex-col justify-center mx-auto">
                     
                     <SelectModel _onchange={handleModelSelection} />
 
                     {/* Affichage des metrics */}
                     <section style='width: 80%' class="mx-auto">
-                        <p class="text-center text-white text-2xl">Metrics</p>
-                        <div class="flex flex-wrap">
-                            <div class="m-auto" style="width:250px; height:250px">
-                                <canvas class="m-2" id="pieChart"></canvas>
+                        <header class="text-center text-white text-2xl">
+                            <p>Metrics</p>
+                            <div class="flex">
+                                
+                                    <button value="pie" onclick={showGraph}>Pie</button>
+                                
+                                
+                                
+                                    <button value="line" onclick={showGraph}>Line</button>
+                                
                             </div>
-                            <div class="m-auto" style="width:400px; height:200px">
-                                <canvas class="bg-white m-2" id="accuracyChart"></canvas>
-                            </div>
-                            <div class="m-auto" style="width:400px; height:200px">
-                                <canvas class="bg-white m-2" id="lossChart"></canvas>
-                            </div>
-                        </div>
+                        </header>
+                        <main class="flex flex-wrap">
+                            <Show when={onShowGraph() == 'pie'}>
+                                <div class="m-auto" style="width:250px; height:250px"> <canvas class="m-2" id="pieChart"></canvas> </div>
+                            </Show> 
+                            <Show  when={onShowGraph() ==  'line'}>
+                                <div class="m-auto" style="width:400px; height:200px"> <canvas class="bg-white m-2" id="accuracyChart"></canvas> </div>
+                                <div class="m-auto" style="width:400px; height:200px"> <canvas class="bg-white m-2" id="lossChart"></canvas> </div>                            
+                            </Show>
+                        </main>
                     </section>
 
 
