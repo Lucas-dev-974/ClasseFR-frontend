@@ -1,15 +1,24 @@
 //Page "Statistiques globales"
 
 import {Chart} from "chart.js";
-import { onMount } from "solid-js";
+import { onMount, createResource, createSignal } from "solid-js";
+
+import { request } from "../services/services";
 
 // correction bug pas compris : https://github.com/sgratzl/chartjs-chart-wordcloud/issues/4
 import { registerables } from 'chart.js';
 Chart.register(...registerables);
 //---------------------------------------
+const [totalPredctions, setTotalPredictions] = createSignal()
+const stats_globales_request = async () => (await request('api/stats_globales/total_pred', 'GET', null)).json().then(response => {
+    setTotalPredictions(response.total_predictions);
+    console.log(response.total_predictions)
+})
+// Afficher la page que quand requete effectué ! avec then ? onSetup ?
 
 export default function Stats_globales() {
     
+    const [dataGlobale] = createResource(stats_globales_request)
     const handleGraph = () => {
         const ctx = document.getElementById('myChart') as HTMLCanvasElement;
 
@@ -50,7 +59,7 @@ export default function Stats_globales() {
             </p>
 
             <p class="m-10 text-center text-2xl text-white">
-                Nombre total de prédictions : XXXX
+                Nombre total de prédictions : {totalPredctions()}
             </p>
             <div class="flex justify-center pb-10">
                 <div style="width:400px; height:400px">
