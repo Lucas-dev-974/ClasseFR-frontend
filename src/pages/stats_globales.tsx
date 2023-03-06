@@ -76,7 +76,3 @@ export default function Stats_globales() {
         </main>
     )
 }
-
-function recupDataGraph () {
-    
-}
