@@ -1,5 +1,5 @@
 // Importations SolidJS
-import { Component, createSignal, Match, onMount, Show, Switch } from 'solid-js';
+import { Component, createResource, createSignal, Match, onMount, Show, Switch } from 'solid-js';
 
 // Importations des pages
 import Prediction from './pages/Prediction'
@@ -17,12 +17,16 @@ import Navbar from './components/navbar';
 import Notification from './services/notification';
 import authenticationCheck from './utils';
 import { notifs } from './signaux';
+import { request } from './services/services';
 
 const App: Component = () => {
-
   // Récuperer le dernier elt de l'url
   const page = window.location.pathname.split( '/' )[window.location.pathname.split( '/' ).length - 1]; // ATTENTION, implique qu'il n'est pas possible d'avoir des urls dont la fin est identiques
-  
+
+  // var verifToken = jwt.verify(token, "1bc3851624fa399d46350929f20dd5610d0aa5994b621d69");
+  // var tokenTest = jwt.sign({data: 'foobar'}, 'secret');
+  // console.log("iciiiiiiiiii=>", verifToken);
+
   // Vérif si utilisateur connecté
   const connexion = authenticationCheck();
 
