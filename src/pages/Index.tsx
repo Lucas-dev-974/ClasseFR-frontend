@@ -1,11 +1,12 @@
 // Page "Home"
 
 // Import SolidJS
-import { onMount, createSignal, Show} from "solid-js"; // OnSe ?!
+import { onMount, createSignal, Show, createResource} from "solid-js"; // OnSe ?!
+
 
 // Import fonction custom
 import authenticationCheck from "../utils";
-
+import { request } from "../services/services";
 // TailWindCSS classes
 const buttonClass = "rounded-2xl p-2 md:p-8 m-3 bg-[#7D6ADE] w-[120px] h-[110px] md:w-[200px] md:h-[200px] ";
 const buttonStyle = "height: 200px";
@@ -13,8 +14,12 @@ const buttonTextClass = "text-center font-medium text-white text-sm md:text-xl "
 const buttonSVGWidth  = "100";
 const buttonSVGHeight = "100";
 
+//TEST
+// const fetchTest = async ()=> (await request('api/model/test', 'POST', {"test":"test"})).json().then(response => console.log(response));
 
 export default function Index(){
+    //TEST
+    // const [test] = createResource(fetchTest);
 
     // Vérif si utilisateur connecté
     const connexion = authenticationCheck();
