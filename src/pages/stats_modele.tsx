@@ -24,7 +24,7 @@ export default function Stats_modele() {
     const [onShowGraph,setShowGraph] = createSignal('line')
     const [selectedModelID, setSelectedModelID] = createSignal(0)
 
-    const [trainedOnClasses, setTrainedOnClasses] = createSignal()
+    const [trainedOnClasses, setTrainedOnClasses] = createSignal([])
     const [trainedOn] = createResource(selectedModelID, fetchTrainedOnClasses)
 
     // Fonction permettant la 1ere étape de l'update chart => la suppression
@@ -265,7 +265,6 @@ export default function Stats_modele() {
                         <For each={trainedOnClasses()}>{(classe, i) =>
                             <div class="bg-[#7D6ADE] rounded text-center w-[150px] mx-2 py-1 text-[0.9em]">
                                 <p> {classe.name}   </p>
-                                {/* <p> {classe.nb_img} img</p> */}
                             </div>
                         }</For>
                     </div>
