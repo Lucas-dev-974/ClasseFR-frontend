@@ -4,36 +4,12 @@ import authenticationCheck from '../utils';
 import { request } from '../services/services';
 import { Formater } from '../services/services';
 
-
-// const loginRequest = async (identifiants:Array<string>) => (await axios.post('http://localhost:8000/api/login', {"username":identifiants[0], "password":identifiants[1]}).then(
-//   response => {
-//     if(response.data.token){
-//       // Enregistrement du token dans le local storage
-//       localStorage.setItem("Authorization", response.data.token);
-//       console.log("token récup depuis backend => ", localStorage.getItem('Authorization'));
-
-//       // // Test requête "GET" authentifié
-//       // var authorization = localStorage.getItem("Authorization");
-//       // axios.get('http://localhost:8000/api/token_authenticated', { headers: { Authorization : String(authorization) }}).then(response=> {
-//       //   console.log(response.data);
-//       // })
-
-//       // Redirection
-//       window.location.href = '/';
-//     }
-//     else{
-//       // Message d'erreur recup depuis le back-end ; ici déclencher la notification
-//       console.log(response.data)
-//     }
-//   }
-// ))
-
 // Enregistre le token et fait la redirection
 function actionLogin(response:any){
   if(response.token){
     // Enregistrement du token dans le local storage
     localStorage.setItem("Authorization", response.token);
-    console.log("token récup depuis backend => ", localStorage.getItem('Authorization'));
+    // console.log("token récup depuis backend => ", localStorage.getItem('Authorization'));
 
     // Redirection
     window.location.href = '/';
@@ -55,19 +31,12 @@ export default function Login() {
   // Identifiants entrée
   const [username, setUsername] = createSignal('');
   const [ pwd, setPwd ] = createSignal('');
-  
-  // Vérif du statut d'authentification
-  // console.log("authenticationCheck=>",authenticationCheck())
 
   // Fontion executé lors du submit
   const handleLogin = async (event:any) => {
     const formdata=Formater({username: username(), password:pwd()})
     setCredentials(formdata);
   }
-
-  onMount(()=> {
-    // console.log(window.location.href)
-  })
 
   return (
     <main class="flex h-screen">

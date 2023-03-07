@@ -1,13 +1,19 @@
+// Importations SolidJS
+import { createResource, createSignal, For, onMount, Show } from "solid-js";
+
+// Importations fonctions customs
 import { selectClasse } from "../signaux";
 import { Formater,request } from "../services/services";
 import { pushNotif, trainClassesSelect } from "../signaux";
-import { createResource, createSignal, For, onMount, Show } from "solid-js"
 
-
+// Requête permettant de récup les classes existantes
 const fetchClasses  = async () => (await request('api/classe/all', 'GET', null)).json()
+
+// Requête permettant d'enregistrer un modèle dans le backend
 const fetchAddModel = async (formdata: any) => (await request('api/model/create', 'POST', formdata))
 
 export default function AddModel(){
+
     const [classes] = createResource(fetchClasses)
     
     const [modelData, setModelData] = createSignal()

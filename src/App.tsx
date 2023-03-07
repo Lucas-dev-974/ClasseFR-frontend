@@ -8,6 +8,7 @@ import Stats_globales from './pages/stats_globales';
 import Entrainement from './pages/entrainement';
 import Stats_modele from './pages/stats_modele';
 import Login from './pages/login';
+import Register from './pages/register';
 
 // Importations elts customs
 import styles from './App.module.css';
@@ -36,6 +37,7 @@ const App: Component = () => {
       <Switch fallback={<div>Not Found</div>}>
         <Match when={page == ""}> <Index /> </Match>
         <Match when={page == "login" && !connexion}> <Login/> </Match> {/* Concernant la page Login si user pas connecté tente d'y accéder plutot faire une redirection ? */}
+        <Match when={page == "register" && connexion}> <Register/> </Match>
         <Match when={page == "prediction"}> <Prediction /> </Match>
         <Match when={page == "stats_globales"}> <Stats_globales/> </Match>
         <Match when={page == "entrainement" && connexion}> <Entrainement/> </Match> {/* OU afficher message perso "Vous devez vous connecter pour avoir accès à cette page !" */}
