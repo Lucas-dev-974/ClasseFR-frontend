@@ -19,13 +19,16 @@ Chart.register(...registerables);
 declare const window: any;
 
 const fetchTrainedOnClasses = async (model_id: number) => (await request('api/model/trained_on_classes/' + model_id, 'GET', null)).json()
+const fetchBadPredictions = async (model_id: number)    => (await request('api/model/bad_predictions/'    + model_id, 'GET', null)).json()
+
 
 export default function Stats_modele() {
     const [onShowGraph,setShowGraph] = createSignal('line')
-    const [selectedModelID, setSelectedModelID] = createSignal(0)
 
-    const [trainedOnClasses, setTrainedOnClasses] = createSignal([])
+    const [selectedModelID, setSelectedModelID] = createSignal(0)
     const [trainedOn] = createResource(selectedModelID, fetchTrainedOnClasses)
+    const [badPredictionsfetched] = createResource(selectedModelID, fetchBadPredictions)
+    const [badPredictions, setBadPrediction] = createSignal([])
 
     // Fonction permettant la 1ere étape de l'update chart => la suppression
     function removeData(chart:any) {
@@ -206,13 +209,13 @@ export default function Stats_modele() {
     const handleModelSelection = (e) => {
         dynamicGraph(e.target.value)
         setSelectedModelID(e.target.value)
-        
+
         createEffect(() => {
-            // console.log(trainedOn())
-            setTrainedOnClasses(trainedOn())
+            console.log(badPredictionsfetched())
+            setBadPrediction(badPredictionsfetched())
         })
-        
-        
+       
+       
     }
 
         // Return de la page finale à charger
@@ -262,7 +265,7 @@ export default function Stats_modele() {
                     <p class="text-left text-white text-2xl my-2 py-2">Classes d'entrainement</p>  
 
                     <div class="flex flex ">
-                        <For each={trainedOnClasses()}>{(classe, i) =>
+                        <For each={trainedOn()}>{(classe, i) =>
                             <div class="bg-[#7D6ADE] rounded text-center w-[150px] mx-2 py-1 text-[0.9em]">
                                 <p> {classe.name}   </p>
                             </div>
@@ -273,10 +276,11 @@ export default function Stats_modele() {
                 {/* Affichage des mauvaise prrédictions  */}
                 <section class="mx-auto py-3">
                     <p class="text-left text-white text-2xl pb-4">Mauvaises prédictions</p>
+
                     <div class="flex felx-wrap  mx-auto">
-                        <BadPredictionCard url="https://assets.afcdn.com/recipe/20210514/120317_w1024h1024c1cx1060cy707.jpg" reelleClasse="Pizza" prediction="Tacos"/>
-                        <BadPredictionCard url="https://assets.afcdn.com/recipe/20130627/42230_w1024h1024c1cx1250cy1875.jpg" reelleClasse="Hamburger" prediction="Pizza"/>
-                        <BadPredictionCard url="https://img.cuisineaz.com/660x660/2019/04/17/i146583-tacos-poulet-curry.jpeg" reelleClasse="Tacos" prediction="Hamburger"/>
+                        <For each={badPredictions()}>{(bad, i) => 
+                            <BadPredictionCard url="https://img.cuisineaz.com/660x660/2019/04/17/i146583-tacos-poulet-curry.jpeg" reelleClasse="Tacos" prediction="Hamburger"/>
+                        }</For>                        
                     </div>
                 </section>
 
