@@ -1,16 +1,14 @@
-import { createEffect, createResource, createSignal, For, Show } from "solid-js"
+import { createResource, createSignal, For, Show } from "solid-js"
 import { Formater, request } from "../services/services"
 import { pushNotif, selectedModel } from "../signaux"
 import SelectModel from "../components/SelectModel"
 
-const fetchPrediction = async (data:any) => (await request('api/model/predict', 'POST', data)).json()
+
 const fGetClasses     = async () => (await request('api/classe/all', 'GET', null)).json()
 const fBadPrediction  = async (data:any) => (await request('api/model/feedback    ', 'POST', data)).json()
 
 export default function Prediction(){
-    const [predictionData, setPrediction] = createSignal()
-    const [preds] = createResource(predictionData, fetchPrediction)
-
+    const [prediction, setPrediction] = createSignal(null)
     const [classes] = createResource(fGetClasses)
 
     const [badPredict, setBadPredict] = createSignal()
@@ -24,7 +22,6 @@ export default function Prediction(){
     const [on, setOn] = createSignal('predict')
 
     const predict = async () =>{
-        console.log(selectedModel.id)
         if(selectedModel.id == undefined){
           pushNotif({message: 'Veuillez sélectionner un modèle avant de lancer la prédiction !'})
           return false
@@ -34,13 +31,15 @@ export default function Prediction(){
           return false;
         }
         
-        setPrediction(Formater({model_id: selectedModel.id, img: file, filename: file.name}))
         
-        createEffect(() => {
-          setPredictionTxt(preds()  != undefined ? preds().prediction : '...')
+        const response = await request('api/model/predict', 'POST', Formater({model_id: selectedModel.id, img: file, filename: file.name}))
+    
+        response.json().then(json => {
+          setPrediction(json)
+          setPredictionTxt(json  != undefined ? json.prediction : '...')
+          setOn('predicted')
         })
-  
-        setOn('predicted')
+        
       }
   
       const badPrediction = () => setOn('badpredicted')
@@ -80,13 +79,16 @@ export default function Prediction(){
       }
   
       const handleCategorie = (e:any) => {
-        console.log(e.target.value, preds().pred_id)
-        setBadPredict(Formater({pred_id: preds().pred_id, categorie_id: e.target.value}))
-        console.log(badPredResource())
+        const categorie = JSON.parse(e.target.value)
+        setBadPredict(Formater({pred_id: prediction().pred_id, categorie_id: categorie.id }))
+        pushNotif({message: 'Merci pour votre retour sur la pédictions !'})
+        nextPrediction()
       }
+
+
     return(
         <main class="lg:container relative mx-auto">
-        <section class="w-full"> {/** Selection modèle */}
+        <section class="w-full"> {/** Selection modèle */} 
           <div class="mt-10">
             <p class="text-center text-white text-xl">Sélectionner un modèle</p>
             <div class="flex justify-center mx-auto mt-3" style="max-width: 450px">
@@ -117,9 +119,7 @@ export default function Prediction(){
 
             <div class="w-full flex justify-center flex-wrap">
               <Show when={on() == 'predict'}>
-                
                   <button type="button" onClick={predict} class="w-64 justify-center text-white  bg-[#7D6ADE] font-medium rounded-lg text-sm px-5 py-2.5 mt-4">Prédire</button>
-                
               </Show>
 
               <Show when={on() == 'predicted'}>
@@ -138,7 +138,7 @@ export default function Prediction(){
 
                 <div class="bg-[#7D6ADE] rounded-lg relative  flex flex-wrap justify-around" style='height: 134px; max-width: 600px; min-width: 250px'>
                   <For each={classes()}>{(classe, i) => 
-                    <button type="button" onclick={handleCategorie} value={classe.id} class="w-40 h-10 justify-center text-white  bg-[#3A2798] font-medium rounded-lg text-sm  p-1 my-2 mx-3">{classe.name}</button>
+                    <button type="button" onclick={handleCategorie} value={JSON.stringify(classe)} class="w-40 h-10 justify-center text-white  bg-[#3A2798] font-medium rounded-lg text-sm  p-1 my-2 mx-3">{classe.name}</button>
                   }</For>
                 </div>
               </Show>

@@ -44,9 +44,7 @@ export default function AddModel(){
         const formdata = Formater({name: modelName(), file: file, classes: [...classes]})
         setModelData(formdata)
         console.log(model())
-        // const [response] = request('api/model/create', 'POST', formdata)
-
-        // console.log(response())
+        
         modal.hide()
     }
 
@@ -58,7 +56,7 @@ export default function AddModel(){
         let errors = ''
         
         if(!file || file === undefined || file === null) errors += 'Veuillez sélectionner un fichier'
-        if(modelName().length == 0)                      errors += 'Veuillez entrer un nm pour le modèle.'
+        if(modelName().length == 0)                      errors += 'Veuillez entrer un nom pour le modèle.'
 
         return errors
     }
@@ -85,8 +83,8 @@ export default function AddModel(){
                             <input onChange={handleFile} class="relative m-0  w-full  flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-1 text-sm font-normal text-neutral-700 outline-none transition duration-300 ease-in-out file:-mx-3 file:-my-1.5 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-1.5 file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[margin-inline-end:0.75rem] file:[border-inline-end-width:1px] hover:file:bg-neutral-200 focus:border-primary focus:bg-white focus:text-neutral-700 focus:shadow-[0_0_0_1px] focus:shadow-primary focus:outline-none dark:bg-transparent dark:text-neutral-200 dark:focus:bg-transparent" id="formFileSm" type="file" />
                         </div>
 
-                        <div class="relative " data-te-input-wrapper-init>
-                            <input type="text" class="rounded text-black min-h-[auto] w-full border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-1 text-sm font-normal  outline-none transition duration-300 ease-in-out file:-mx-3 hover:file:bg-neutral-200 focus:border-primary focus:bg-white" id="exampleFormControlInput1" placeholder="Nom du modèle" 
+                        <div class="relative ">
+                            <input type="text" class="rounded text-black min-h-[auto] w-full border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-1 text-sm font-normal  outline-none transition duration-300 ease-in-out file:-mx-3 hover:file:bg-neutral-200 focus:border-primary focus:bg-white" placeholder="Nom du modèle" 
                             onKeyPress={(e) => setModelName(e.currentTarget.value)} value={modelName()}  />
                         </div>
 
