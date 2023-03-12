@@ -19,16 +19,19 @@ Chart.register(...registerables);
 declare const window: any;
 
 const fetchTrainedOnClasses = async (model_id: number) => (await request('api/model/trained_on_classes/' + model_id, 'GET', null)).json()
-const fetchBadPredictions = async (model_id: number)    => (await request('api/model/bad_predictions/'    + model_id, 'GET', null)).json()
+const fetchBadPredictions   = async (model_id: number) => (await request('api/model/bad_predictions/'    + model_id, 'GET', null)).json()
 
 
 export default function Stats_modele() {
-    const [onShowGraph,setShowGraph] = createSignal('line')
+    // Signals
+    const [onShowGraph,setShowGraph]              = createSignal('line')
+    const [badPredictions, setBadPrediction]      = createSignal([])
+    const [selectedModelID, setSelectedModelID]   = createSignal(null)
+    const [trainedOnClasses, setTrainedOnClasses] = createSignal([])
 
-    const [selectedModelID, setSelectedModelID] = createSignal(0)
-    const [trainedOn] = createResource(selectedModelID, fetchTrainedOnClasses)
+    // Resources
+    const [trainedOnFettched]     = createResource(selectedModelID, fetchTrainedOnClasses)
     const [badPredictionsfetched] = createResource(selectedModelID, fetchBadPredictions)
-    const [badPredictions, setBadPrediction] = createSignal([])
 
     // Fonction permettant la 1ere étape de l'update chart => la suppression
     function removeData(chart:any) {
@@ -206,16 +209,18 @@ export default function Stats_modele() {
     }
         
 
-    const handleModelSelection = (e) => {
+    const handleModelSelection = (e: any) => {
+        console.log(trainedOnFettched())
+        console.log('handle model selection')
         dynamicGraph(e.target.value)
         setSelectedModelID(e.target.value)
 
         createEffect(() => {
-            console.log(badPredictionsfetched())
+            setTrainedOnClasses(trainedOnFettched())
             setBadPrediction(badPredictionsfetched())
         })
-       
-       
+
+        
     }
 
         // Return de la page finale à charger
@@ -265,9 +270,9 @@ export default function Stats_modele() {
                     <p class="text-left text-white text-2xl my-2 py-2">Classes d'entrainement</p>  
 
                     <div class="flex flex ">
-                        <For each={trainedOn()}>{(classe, i) =>
+                        <For each={trainedOnClasses()}>{(classe, i) =>
                             <div class="bg-[#7D6ADE] rounded text-center w-[150px] mx-2 py-1 text-[0.9em]">
-                                <p> {classe.name}   </p>
+                                <p> {classe} </p>
                             </div>
                         }</For>
                     </div>
@@ -279,7 +284,7 @@ export default function Stats_modele() {
 
                     <div class="flex felx-wrap  mx-auto">
                         <For each={badPredictions()}>{(bad, i) => 
-                            <BadPredictionCard url="https://img.cuisineaz.com/660x660/2019/04/17/i146583-tacos-poulet-curry.jpeg" reelleClasse="Tacos" prediction="Hamburger"/>
+                            <BadPredictionCard url={"http://localhost:8000/api/media/" + bad.image_id} reelleClasse={bad.user_feedback} prediction={bad.classe}/>
                         }</For>                        
                     </div>
                 </section>

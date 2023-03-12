@@ -71,7 +71,7 @@ export default function Prediction(){
       }
   
       const nextPrediction = () => {
-        file = null
+        // file = null
         image_area.style.backgroundImage = ''
         image_area.innerHTML = img_before 
         setOn('predict')
@@ -107,7 +107,7 @@ export default function Prediction(){
                     <div class="flex items-center space-x-2 mx-auto" id="selected_img">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#929292" d="M7 17h10q.3 0 .45-.275t-.05-.525l-2.75-3.675q-.15-.2-.4-.2t-.4.2L11.25 16L9.4 13.525q-.15-.2-.4-.2t-.4.2l-2 2.675q-.2.25-.05.525T7 17Zm-2 4q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.588 1.413T19 21H5Z"/></svg>
                     </div>
-                    <input type="file" name="file_upload"  class="hidden" accept="image/png, image/jpg, image/jpeg " onChange={handleImage}/>
+                    <input type="file" name="file_upload"  class="hidden" accept="image/png, image/jpg, image/jpeg " onchange={handleImage}/>
                 </label>
             </div>
 

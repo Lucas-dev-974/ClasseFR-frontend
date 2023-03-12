@@ -1,16 +1,14 @@
 // Importations SolidJS
-import { createResource, createSignal, For, onMount, Show } from "solid-js";
+import { createEffect, createResource, createSignal, For, onMount, Show } from "solid-js";
 
 // Importations fonctions customs
 import { selectClasse } from "../signaux";
 import { Formater,request } from "../services/services";
 import { pushNotif, trainClassesSelect } from "../signaux";
 
-// Requête permettant de récup les classes existantes
-const fetchClasses  = async () => (await request('api/classe/all', 'GET', null)).json()
-
-// Requête permettant d'enregistrer un modèle dans le backend
-const fetchAddModel = async (formdata: any) => (await request('api/model/create', 'POST', formdata))
+/** Requêtes */
+const fetchClasses  = async ()              => (await request('api/classe/all', 'GET', null)).json()
+const fetchAddModel = async (formdata: any) => (await request('api/model/create', 'POST', formdata)).json()
 
 export default function AddModel(){
 
@@ -38,14 +36,16 @@ export default function AddModel(){
             return false
         }   
         
+        pushNotif({ message: 'Veuillez passienter le modèle est en cour d\import' })
         let classes: Array<number> = []
         trainClassesSelect.forEach((element: any) => classes.push(element.id) );
 
         const formdata = Formater({name: modelName(), file: file, classes: [...classes]})
-        setModelData(formdata)
-        console.log(model())
-        
-        modal.hide()
+
+        request('api/model/create', 'POST', formdata).then(response => response.json().then(json => {
+            pushNotif({message: json})
+            modal.hide()
+        }))
     }
 
     /**
